@@ -11,6 +11,7 @@ dependencies {
     
     implementation("commons-logging:commons-logging:1.1.1")
     implementation("commons-httpclient:commons-httpclient:3.0.1")
+    implementation("commons-configuration:commons-configuration:1.10")
     implementation("commons-codec:commons-codec:1.4")
     implementation("javax.xml.bind:jaxb-api:2.3.1")
     implementation("org.codehaus.jackson:jackson-mapper-asl:${project.ext.jacksonVersion}")

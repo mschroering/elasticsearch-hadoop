@@ -3,10 +3,21 @@ description = "Elasticsearch Spark (for Spark 3.X)"
 
 evaluationDependsOn(':elasticsearch-hadoop-mr')
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:6.1.0'
+    }
+}
+
 apply plugin: 'java-library'
 apply plugin: 'scala'
 apply plugin: 'es.hadoop.build.integration'
 apply plugin: 'scala.variants'
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: 'java'
 
 variants {
     defaultVersion '2.12.10'
@@ -15,7 +26,7 @@ variants {
 
 configurations {
     embedded {
-        transitive = false
+        transitive = true
         canBeResolved = true
     }
     implementation {
@@ -190,7 +201,15 @@ artifacts {
     }
 }
 
+shadowJar {
+   dependencies {
+      exclude(dependency('org.apache.spark:.*'))
+      exclude(dependency('org.apache.hadoop:.*'))
+   }
+}
+
 jar {
+    dependsOn shadowJar
     dependsOn(project.configurations.embedded)
     from(project.configurations.embedded.collect { it.isDirectory() ? it : zipTree(it)}) {
         include "org/elasticsearch/hadoop/**"
